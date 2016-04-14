@@ -732,7 +732,7 @@ design rules under a new name.</description>
 <attribute name="NAME" x="45.1612" y="2.4638" size="1.27" layer="25" ratio="10" rot="R90"/>
 <attribute name="VALUE" x="50.165" y="2.54" size="1.27" layer="27" rot="R90"/>
 </element>
-<element name="C5" library="pic32_lib" package="B45181A" value="10mu" x="35.56" y="15.24" smashed="yes">
+<element name="C5" library="pic32_lib" package="B45181A" value="10uF" x="35.56" y="15.24" smashed="yes">
 <attribute name="VALUE" x="33.608" y="11.589" size="1.27" layer="27" ratio="10"/>
 </element>
 <element name="J1" library="pic32_lib" package="1X08_ROUND" value="" x="1.27" y="16.51" smashed="yes" rot="R90">

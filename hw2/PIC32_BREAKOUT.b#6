@@ -8,10 +8,10 @@
 </settings>
 <grid distance="0.01" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.001" altunitdist="inch" altunit="inch"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
-<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
-<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="no" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="no" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
@@ -153,6 +153,14 @@
 <text x="3" y="18.5" size="1.27" layer="21">3.3V</text>
 <text x="3" y="16" size="1.27" layer="21">GND</text>
 <text x="1.016" y="44.704" size="1.778" layer="21">*</text>
+<text x="43.386" y="33.246" size="1.27" layer="21">A0</text>
+<text x="43.386" y="30.746" size="1.27" layer="21">A1</text>
+<text x="43.386" y="28.246" size="1.27" layer="21">B2</text>
+<text x="43.386" y="25.746" size="1.27" layer="21">B3</text>
+<text x="43.386" y="23.246" size="1.27" layer="21">B4</text>
+<text x="43.386" y="20.746" size="1.27" layer="21">A4</text>
+<text x="43.386" y="18.246" size="1.27" layer="21">3.3V</text>
+<text x="43.386" y="15.746" size="1.27" layer="21">GND</text>
 </plain>
 <libraries>
 <library name="pic32_lib">

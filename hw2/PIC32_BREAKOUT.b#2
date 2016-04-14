@@ -162,6 +162,7 @@
 <text x="43.386" y="18.246" size="1.27" layer="21">5V</text>
 <text x="43.386" y="15.746" size="1.27" layer="21">GND</text>
 <text x="21.59" y="36.068" size="1.778" layer="21">*</text>
+<text x="10.668" y="9.144" size="1.778" layer="22" rot="MR90">Abraham 2016</text>
 </plain>
 <libraries>
 <library name="pic32_lib">
