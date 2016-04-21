@@ -20,6 +20,8 @@
     </logicalFolder>
     <itemPath>PIC32.h</itemPath>
     <itemPath>main.c</itemPath>
+    <itemPath>i2c_util.c</itemPath>
+    <itemPath>i2c_util.h</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

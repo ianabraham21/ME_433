@@ -1,8 +1,9 @@
 #include "PIC32.h"
+#include "i2c_util.h"
 #include <math.h>
 
 #define CS LATBbits.LATB7       // chip select pin
-
+#define SLAVE_ADDR 0x20
 // send a byte via spi and return the response
 unsigned char spi_io(unsigned char o) {
   SPI1BUF = o;
@@ -13,7 +14,6 @@ unsigned char spi_io(unsigned char o) {
 }
 
 void initSPI1() {
-
     // set RB13 pin to be SDO1
     RPB13Rbits.RPB13R = 0b0011;
 
@@ -29,7 +29,6 @@ void initSPI1() {
     SPI1CONbits.CKE = 1;      // data changes when clock goes from hi to lo (since CKP is 0)
     SPI1CONbits.MSTEN = 1;    // master operation
     SPI1CONbits.ON = 1;       // turn on spi 1
-
 }
 
 void setVoltage(char channel, unsigned char voltage){
@@ -58,6 +57,8 @@ int main() {
     DDPCONbits.JTAGEN = 0;    
     __builtin_enable_interrupts();
 
+
+    i2c_master_setup();
     initSPI1(); // initialize spi1
     unsigned char volts = 0;
     char channel = 0;
@@ -80,7 +81,38 @@ int main() {
     }
 
     i = 0;
+
+    // some i2c stuff that I think will work 
+           i2c_master_start(); // send the start bit
+           i2c_master_send(0x40); // left shift address or'ed with 0 for write
+           i2c_master_send(0x00); // write to the GPIO pins
+           i2c_master_send(0x00); // make GPIO pin 1, 4 , and 6 latch to high
+           i2c_master_stop();
+
+           i2c_master_start();
+           i2c_master_send(0x40); // left shift address or'ed with 0 for write
+           i2c_master_send(0x0A); // write to the GPIO pins
+           i2c_master_send(0b010); // make GPIO pin 1, 4 , and 6 latch to high
+           i2c_master_stop();
+
+           // i2c_master_send(SLAVE_ADDR << 1); // left shift address or'ed with 0 for write
+           // i2c_master_send(0x09); // write to the GPIO pins
+           // i2c_master_send(0xFF); // make GPIO pin 1, 4 , and 6 latch to high
+           // i2c_master_stop();
+
+
     while(1) {
+           // i2c_master_start(); // send the start bit
+           // i2c_master_send(SLAVE_ADDR << 1); // left shift address or'ed with 0 for write
+           // i2c_master_send(0x00); // write to the GPIO pins
+           // i2c_master_send(0x00); // make GPIO pin 1, 4 , and 6 latch to high
+           // i2c_master_stop();
+
+           // i2c_master_send(SLAVE_ADDR < 1|0); // left shift address or'ed with 0 for write
+           // i2c_master_send(0x0A); // write to the GPIO pins
+           // i2c_master_send(0xFF); // make GPIO pin 1, 4 , and 6 latch to high
+           // i2c_master_stop();
+
 	    // use _CP0_SET_COUNT(0) and _CP0_GET_COUNT() to test the PIC timing
 		// remember the core timer runs at half the CPU speed
         // i = 0;
@@ -91,7 +123,7 @@ int main() {
             _CP0_SET_COUNT(0);
          }
         if (i > 1000){i = 0;}
-//        setVoltage(channel, volts);
+
     }
     
     
