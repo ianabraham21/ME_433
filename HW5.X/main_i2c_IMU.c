@@ -10,6 +10,9 @@
 #define CTRL1_XL 0x10
 #define CTRL2_G 0x11
 #define CTRL3_C 0x12
+#define OUT_TEMP_L 0x22 // start of the bit read
+
+void two_comp(unsigned char * data, char len, short * data_comb);
 
 int main() {
 
@@ -25,7 +28,7 @@ int main() {
     DDPCONbits.JTAGEN = 0;    
     __builtin_enable_interrupts();
 
-    i2c_master_setup();
+    i2c_master_setup(); // init i2c
     initSPI1(); // initialize spi1
 
     unsigned char volts = 0;
@@ -47,32 +50,15 @@ int main() {
         t_wave[i] = (unsigned char) 255 * i /1000;
     }
 
-    i = 0;
 
-    // some i2c stuff that I think will work 
-   // i2c_master_start(); // send the start bit
-   // i2c_master_send((SLAVE_ADDR << 1) | 0); // left shift address or'ed with 0 for write 1 for read
-   // i2c_master_send(0x0F); // write to the register
-   // i2c_master_restart(); // start again
-   // i2c_master_send((SLAVE_ADDR << 1) | 1);
-   // char r = i2c_master_recv();
-   // i2c_master_ack(1);
-   // i2c_master_stop();
-   
-   // // setting up the accel
-   // i2c_master_start(); // start bit
-   // i2c_master_send((SLAVE_ADDR << 1) | 0);
-   // i2c_master_send(0x10); // the CTRL1_XL register
-   // i2c_master_send(0b10000000); // this looks about right
-   // i2c_master_stop();
-
+    // pause a bit
     CS = 0;
-
     _CP0_SET_COUNT(0);
     while (_CP0_GET_COUNT() < 24000000) { ; }
 
     // checking the WHOAMI register
     unsigned char databuff[10];
+    short filt_data[10];
     i2c_read(SLAVE_ADDR, WHO_AM_I, databuff, 1);
     if (databuff[0] == 0b01101001) {CS = 1;}
 
@@ -84,12 +70,25 @@ int main() {
     i2c_write (SLAVE_ADDR, CTRL3_C, databuff, 1);
 
     // let's try reading the temperature data
+    i2c_read( SLAVE_ADDR, OUT_TEMP_L, databuff, 14);
 
+    while(1) { 
 
-    while(1) { ; }
+        // let's try reading the temperature data
+        i2c_read( SLAVE_ADDR, OUT_TEMP_L, databuff, 14);
+        two_comp(databuff, 14, filt_data);
+
+    }
         
 }
 
+void two_comp(unsigned char * data, char len, short * data_comb){
 
+    int i = 0;
+    for (i; i<len; i = i + 2){
+        data_comb[i/2] = (data[i+1] << 8) | data[i] ;
+    }
+
+}
 
 

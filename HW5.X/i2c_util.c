@@ -83,9 +83,8 @@ void i2c_read(unsigned char address, unsigned char reg,
     // have the loop start at 1 to prevent sending an addition ack 
     char i;
     for (i = 1; i < len; i++){
-        if (i == 1) { i2c_master_ack(0); }
-        data[i] = i2c_master_recv();
         i2c_master_ack(0);
+        data[i] = i2c_master_recv();
     }
     // if len == 1 then the loop should skip and end the read
     i2c_master_ack(1);
