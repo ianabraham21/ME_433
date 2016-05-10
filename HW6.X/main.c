@@ -11,8 +11,9 @@
 #define CTRL2_G 0x11
 #define CTRL3_C 0x12
 #define OUT_TEMP_L 0x22 // start of the bit read
+#define OUTX_L_XL 0x28 // start of accel data
 
-void write2LCD(char * str) {
+void write2LCD(char * str, unsigned short column) {
     unsigned short i,j;
     unsigned short q = 0;
     unsigned short bitcolor;
@@ -21,9 +22,9 @@ void write2LCD(char * str) {
             for (j=0; j<8; j++){
                 bitcolor = ASCII[str[q]-0x20][i] >> (j) & 1;
                 if (1 == bitcolor ) {
-                    LCD_drawPixel(i+5*q,j,BLACK);
+                    LCD_drawPixel(i+5*q,j+column*8,BLACK);
                 } else {
-                    LCD_drawPixel(i+5*q,j,WHITE);
+                    LCD_drawPixel(i+5*q,j+column*8,WHITE);
                 }
             }
         }
@@ -31,6 +32,9 @@ void write2LCD(char * str) {
     }
 
 }
+
+void two_comp(unsigned char * data, char len, short * data_comb);
+
 
 int main() {
 
@@ -62,13 +66,42 @@ int main() {
 
     char str[100];
     sprintf(str, "01101001");
-    if (databuff[0] == 0b01101001) {write2LCD(str);}
-    _CP0_SET_COUNT(0);
-    while (_CP0_GET_COUNT() < 240000000) {;}
+    if (databuff[0] == 0b01101001) {write2LCD(str, 0);}
+    // _CP0_SET_COUNT(0);
+    // while (_CP0_GET_COUNT() < 24000000) {;}
 
-    
+    sprintf(str, "Works!"); 
+    write2LCD(str, 1);
 
-    sprintf(str, "Now let's make a func"); 
-    write2LCD(str);
+    // write to the CTRL1_XL register
+    databuff[0] = 0b10000000; // sets up the accel register + gyro
+    i2c_write( SLAVE_ADDR, CTRL1_XL, databuff, 1);
+    i2c_write( SLAVE_ADDR, CTRL2_G, databuff, 1);
+    databuff[0] = 1 << 2; // this makes sense (sets IF_INC bit to 1)
+    i2c_write (SLAVE_ADDR, CTRL3_C, databuff, 1);
+
+    // let's try reading the temperature data
+    i2c_read( SLAVE_ADDR, OUT_TEMP_L, databuff, 14);    
+    while(1) { 
+
+        // let's try reading the temperature data
+        i2c_read( SLAVE_ADDR, OUTX_L_XL, databuff, 6);
+        two_comp(databuff, 14, filt_data);
+        sprintf(str,"x : %d     ",filt_data[0]);
+        write2LCD(str, 3);
+        sprintf(str,"y : %d     ",filt_data[1]);
+        write2LCD(str, 4);
+        sprintf(str,"z : %d     ",filt_data[2]);
+        write2LCD(str, 5);
+    }
+
 }
 
+void two_comp(unsigned char * data, char len, short * data_comb){
+
+    int i = 0;
+    for (i; i<len; i = i + 2){
+        data_comb[i/2] = (data[i+1] << 8) | data[i] ;
+    }
+
+}
