@@ -139,7 +139,7 @@ int main(){
     double accel[2];
     double theta;
     float control = 0;
-    float Kp = 500.0, Kd = -0.1;
+    float Kp = 100.0, Kd = -0.1;
 
 //     OC1RS = 2000;
 //     OC2RS = 2000;
